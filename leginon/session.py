@@ -66,13 +66,6 @@ class Reservation(object):
 		## make new reservation
 		sessionres = leginon.leginondata.SessionReservationData(name=name, reserved=True)
 		sessionres.insert(force=True)
-		# TODO: Find a better place to initialize. This one initialize if the last wizard was
-		# set to create new session
-		if ph.BASEURL:
-			try:
-				ph.initialize()
-			except Exception as e:
-				print(e)
 		return True
 
 	def cancel(self):
@@ -157,6 +150,12 @@ def createSession(user, name, description, directory, holder=None, hidden=False)
 		'uid': os.stat(os.path.expanduser('~')).st_uid, #os.stat is platform independant
 		'gid': os.stat(os.path.expanduser('~')).st_gid
 	}
+	# initialize ptolemy when creating new session
+	if ph.BASEURL:
+		try:
+			ph.initialize()
+		except Exception as e:
+			print(e)
 	return leginon.leginondata.SessionData(initializer=initializer)
 
 def createReferenceSession(user, current_session):
